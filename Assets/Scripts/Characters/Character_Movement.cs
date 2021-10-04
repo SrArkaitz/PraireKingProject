@@ -12,6 +12,8 @@ public class Character_Movement : MonoBehaviour
     private float playerSpeed;
     private SpriteRenderer spriteRenderer;
 
+    public Joystick joystick;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,25 +25,63 @@ public class Character_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Flip();
     }
 
     private void FixedUpdate()
     {
-        PlayerMovement();
+        //PlayerMovement();
+        PlayerMovementJoystick();
     }
 
+    float horizontal = 0;
+    float vertical = 0;
 
     public void PlayerMovement()
     {
-        float horizontal;
-        float vertical;
-
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        rb2d.velocity = new Vector2(horizontal, vertical).normalized * playerSpeed;
+        rb2d.velocity = new Vector2(horizontal, vertical).normalized * playerSpeed * Time.fixedDeltaTime;
 
+    }
+
+
+    public void PlayerMovementJoystick()
+    {
+
+        if (joystick.Horizontal >= 0.3f)
+        {
+            horizontal = playerSpeed;
+        }
+        else if (joystick.Horizontal <= -0.3f)
+        {
+            horizontal = -playerSpeed;
+        }
+        else
+        {
+            horizontal = 0f;
+        }
+
+        if (joystick.Vertical >= 0.3f)
+        {
+            vertical = playerSpeed;
+        }
+        else if (joystick.Vertical <= -0.3f)
+        {
+            vertical = -playerSpeed;
+        }
+        else
+        {
+            vertical = 0f;
+        }
+
+        rb2d.velocity = new Vector2(horizontal, vertical).normalized * playerSpeed * Time.fixedDeltaTime;
+
+    }
+
+    private void Flip()
+    {
         if (horizontal > 0)
         {
             spriteRenderer.flipX = false;
@@ -50,7 +90,7 @@ public class Character_Movement : MonoBehaviour
         {
             spriteRenderer.flipX = true;
         }
-
     }
+
 
 }
