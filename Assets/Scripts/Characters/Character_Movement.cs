@@ -11,21 +11,32 @@ public class Character_Movement : MonoBehaviour
     private Rigidbody2D rb2d;
     private float playerSpeed;
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
     public Joystick joystick;
+
+
+    float testSpeed;
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb2d = gameObject.GetComponent<Rigidbody2D>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         playerSpeed = playerData.characSpeed;
+
+
     }
+
+    Vector2 test = new Vector2(0f, 0f);
+
 
     // Update is called once per frame
     void Update()
     {
         Flip();
+        RunAnim();
     }
 
     private void FixedUpdate()
@@ -53,6 +64,7 @@ public class Character_Movement : MonoBehaviour
         if (joystick.Horizontal >= 0.3f)
         {
             horizontal = playerSpeed;
+            Debug.Log(horizontal);
         }
         else if (joystick.Horizontal <= -0.3f)
         {
@@ -66,6 +78,7 @@ public class Character_Movement : MonoBehaviour
         if (joystick.Vertical >= 0.3f)
         {
             vertical = playerSpeed;
+            Debug.Log("vertical");
         }
         else if (joystick.Vertical <= -0.3f)
         {
@@ -92,5 +105,10 @@ public class Character_Movement : MonoBehaviour
         }
     }
 
+    private void RunAnim()
+    {
+        testSpeed = horizontal + vertical;
+        animator.SetFloat("runAnim", Mathf.Abs(testSpeed));
+    }
 
 }
