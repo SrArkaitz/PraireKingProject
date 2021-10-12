@@ -18,6 +18,8 @@ public class Character_Movement : MonoBehaviour
 
     float testSpeed;
 
+    public GameObject pivot;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +38,7 @@ public class Character_Movement : MonoBehaviour
     void Update()
     {
         Flip();
+        FlipPivot();
         RunAnim();
     }
 
@@ -91,6 +94,18 @@ public class Character_Movement : MonoBehaviour
 
         rb2d.velocity = new Vector2(horizontal, vertical).normalized * playerSpeed * Time.fixedDeltaTime;
 
+    }
+
+    private void FlipPivot()
+    {
+        if (horizontal > 0)
+        {
+            pivot.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        else if (horizontal < 0)
+        {
+            pivot.transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
     }
 
     private void Flip()
