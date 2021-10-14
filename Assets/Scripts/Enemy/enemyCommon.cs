@@ -8,18 +8,16 @@ public class enemyCommon : MonoBehaviour
     public float speed;
     public float life;
     public GameObject deathParticles;
+    public Animator animator;
 
 
     GameObject player;
-
-    bool move = true;
 
     Animator anim;
     Rigidbody2D rb;
 
     void Start()
     {
-        
         player = GameObject.FindGameObjectWithTag("Player");
 
         anim = GetComponent<Animator>();
@@ -44,37 +42,28 @@ public class enemyCommon : MonoBehaviour
         Debug.DrawRay(transform.position, forward, Color.red);
         if (hit.collider != null)
         {
-            Debug.Log("Entra");
             if (hit.collider.tag == "Player")
             {
                 Debug.Log("AAA");
                 target = player.transform.position;
             }
         }
-        else
-        {
-            Debug.Log("No entra");
-        }
         float distance = Vector3.Distance(target, transform.position);
         Vector3 dir = (target - transform.position).normalized;
 
         if (distance < attackRadius)
         {
-
+            animator.SetBool("run", true);
         }
         else
         {
-            rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
+            animator.SetBool("run", false);
+            rb.MovePosition(transform.position + dir * speed * Time.deltaTime);            
         }
 
 
         Debug.DrawLine(transform.position, target, Color.green);
 
-        //if (move == true)
-        //{
-        //    rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
-
-        //}
 
 
         if (life <= 0)
@@ -82,6 +71,17 @@ public class enemyCommon : MonoBehaviour
             Instantiate(deathParticles, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
+
+        if (transform.position.x < player.transform.position.x)
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        if (transform.position.x > player.transform.position.x)
+        {
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
+        
+
     }
 
     void OnDrawGizmosSelected()
@@ -91,5 +91,21 @@ public class enemyCommon : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 
+    public void hitted()
+    {
+        life--;
+
+        //Efecto partículas
+
+
+    }
    
 }
+
+
+
+//Mirar maquina de estados
+
+//Mirar corrutina
+
+//Fuerza a rb
