@@ -10,6 +10,8 @@ public class Character_Movement : MonoBehaviour
 
     private Rigidbody2D rb2d;
     private float playerSpeed;
+    private int currentLife;
+    private int maxLife;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
@@ -20,6 +22,8 @@ public class Character_Movement : MonoBehaviour
 
     public GameObject pivot;
 
+    public ParticleSystem dust;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +31,10 @@ public class Character_Movement : MonoBehaviour
         rb2d = gameObject.GetComponent<Rigidbody2D>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         playerSpeed = playerData.characSpeed;
+        currentLife = playerData.currentLife;
+        maxLife = playerData.maxLife;
 
+        playerData.InitLife();
 
     }
 
@@ -67,11 +74,13 @@ public class Character_Movement : MonoBehaviour
         if (joystick.Horizontal >= 0.3f)
         {
             horizontal = playerSpeed;
+            CreateDust();
             Debug.Log(horizontal);
         }
         else if (joystick.Horizontal <= -0.3f)
         {
             horizontal = -playerSpeed;
+            CreateDust();
         }
         else
         {
@@ -81,11 +90,13 @@ public class Character_Movement : MonoBehaviour
         if (joystick.Vertical >= 0.3f)
         {
             vertical = playerSpeed;
+            CreateDust();
             Debug.Log("vertical");
         }
         else if (joystick.Vertical <= -0.3f)
         {
             vertical = -playerSpeed;
+            CreateDust();
         }
         else
         {
@@ -124,6 +135,34 @@ public class Character_Movement : MonoBehaviour
     {
         testSpeed = horizontal + vertical;
         animator.SetFloat("runAnim", Mathf.Abs(testSpeed));
+    }
+
+    private void Die()
+    {
+        if (currentLife <= 0)
+        {
+            Destroy(this.gameObject);
+            //Particula muerte
+            //Acciones de revivir o empezar de nuevo el juego
+        }
+    }
+
+    bool canRecibeDamage = true;
+
+    public void PlayerHittet(int damage)
+    {
+        if (canRecibeDamage)
+        {
+            currentLife -= damage;
+        }
+        //Animación daño
+        //Corrutina invulnerabilidad
+    }
+
+
+    private void CreateDust()
+    {
+        dust.Play();
     }
 
 }
